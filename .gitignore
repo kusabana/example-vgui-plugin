@@ -1,0 +1,6 @@
+_vpc_/
+*.vpc*
+*.vcxproj*
+
+Debug/
+Release/
