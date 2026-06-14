@@ -1,0 +1,41 @@
+
+$Macro SRCDIR		"..\.."
+$Macro OUTBINDIR	"$SRCDIR\..\game\bin"
+
+$Include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$PreprocessorDefinitions			"$BASE;_MBCS"
+	}
+}
+
+$Project "Example VGUI Plugin"
+{
+	$Folder	"Source Files"
+	{
+		$File	"example_vgui_plugin.cpp"
+		$File	"example_frame.cpp"
+
+		$File	"$SRCDIR\public\vgui_controls\vgui_controls.cpp"
+	}
+
+	$Folder	"Header Files"
+	{
+		$File	"example_frame.h"
+
+		$File	"$SRCDIR\public\engine\iserverplugin.h"
+		$File	"$SRCDIR\public\ienginevgui.h"
+		$File	"$SRCDIR\public\tier1\interface.h"
+	}
+
+	$Folder	"Link Libraries"
+	{
+		$Lib mathlib
+		$Lib tier2
+		$Lib tier3
+		$Lib vgui_controls
+	}
+}

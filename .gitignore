@@ -1,5 +1,5 @@
 _vpc_/
-*.vpc*
+*.vpc.*
 *.vcxproj*
 
 Debug/
