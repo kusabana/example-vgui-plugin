@@ -3,10 +3,14 @@
 #include "engine/iserverplugin.h"
 #include "ienginevgui.h"
 #include "interface.h"
+#include "tier0/platform.h"
 #include "tier1/tier1.h"
 #include "tier2/tier2.h"
 #include "tier3/tier3.h"
 #include "vgui/ISurface.h"
+#include "vgui/IVGui.h"
+#include "vgui_controls/AnimationController.h"
+#include "vgui_controls/Panel.h"
 
 #include "example_frame.h"
 
@@ -14,6 +18,26 @@
 #include "tier0/memdbgon.h"
 
 IEngineVGui *engine_vgui = NULL;
+
+class CVGuiAnimationDriver : public vgui::Panel {
+  typedef vgui::Panel BaseClass;
+
+public:
+  CVGuiAnimationDriver(vgui::VPANEL parent)
+      : BaseClass(NULL, "VGuiAnimationDriver") {
+    SetParent(parent);
+    SetVisible(false);
+    SetPaintEnabled(false);
+    SetPaintBackgroundEnabled(false);
+    vgui::ivgui()->AddTickSignal(GetVPanel(), 0);
+  }
+
+  void OnTick() override {
+    vgui::GetAnimationController()->UpdateAnimations(Plat_FloatTime());
+  }
+};
+
+static CVGuiAnimationDriver *g_pAnimDriver = NULL;
 
 class CExamplePlugin : public IServerPluginCallbacks {
 public:
@@ -72,12 +96,18 @@ bool CExamplePlugin::Load(CreateInterfaceFn interfaceFactory,
   ConVar_Register(0);
 
   // Parent the frame to the engine's embedded VGUI panel
-  CExampleFrame::Install(vgui::surface()->GetEmbeddedPanel());
+  vgui::VPANEL root = vgui::surface()->GetEmbeddedPanel();
+  CExampleFrame::Install(root);
+
+  g_pAnimDriver = new CVGuiAnimationDriver(root);
 
   return true;
 }
 
 void CExamplePlugin::Unload(void) {
+  delete g_pAnimDriver;
+  g_pAnimDriver = NULL;
+
   ConVar_Unregister();
   DisconnectTier3Libraries();
   DisconnectTier2Libraries();

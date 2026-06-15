@@ -3,12 +3,8 @@
 #include "convar.h"
 #include "tier1/strtools.h"
 
-#include "tier0/platform.h"
-
 #include <vgui/ISurface.h>
 #include <vgui/IScheme.h>
-#include <vgui/IVGui.h>
-#include <vgui_controls/AnimationController.h>
 #include <vgui_controls/Button.h>
 #include <vgui_controls/Label.h>
 
@@ -20,7 +16,6 @@ CExampleFrame *g_pExampleFrame = NULL;
 CExampleFrame::CExampleFrame(vgui::VPANEL parent)
     : BaseClass(NULL, "ExampleFrame") {
   SetParent(parent);
-  vgui::ivgui()->AddTickSignal(GetVPanel(), 0);
 
   SetProportional(false);
 
@@ -62,11 +57,6 @@ void CExampleFrame::Install(vgui::VPANEL parent) {
 
   g_pExampleFrame = new CExampleFrame(parent);
   Assert(g_pExampleFrame);
-}
-
-void CExampleFrame::OnTick() {
-  BaseClass::OnTick();
-  vgui::GetAnimationController()->UpdateAnimations(Plat_FloatTime());
 }
 
 void CExampleFrame::OnCommand(const char *command) {

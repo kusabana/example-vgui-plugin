@@ -17,7 +17,6 @@ public:
 
   void PerformLayout() override;
   void OnCommand(const char *command) override;
-  void OnTick() override;
 
 private:
   vgui::Label *m_pLabel;
